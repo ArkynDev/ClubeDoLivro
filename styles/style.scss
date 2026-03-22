@@ -1,0 +1,77 @@
+$breakpoints: (
+    mobile: 480px,
+    tablet: 768px,
+    desktop: 1024px,
+    wide: 1440px
+);
+
+@function bp($key) {
+    @return map-get($breakpoints, $key);
+}
+
+:root {
+    --breakpoint-mobile: #{bp(mobile)};
+    --breakpoint-tablet: #{bp(tablet)};
+    --breakpoint-desktop: #{bp(desktop)};
+    --breakpoint-wide: #{bp(wide)};
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+
+#mobileMenu{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+
+    border: none;
+    background-color: #112250;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+
+    display: if(
+        media(width <= var(--breakpoint-tablet)): flex;
+        else: none
+    );
+
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+    transition: all 0.3s ease;
+
+    &:hover{
+        background-color: #3C507D;
+        transform: scale(1.1);
+    }
+
+    &:active{
+        transform: scale(0.95);
+    }
+
+    span {
+        font-size: 2.5rem;
+    }
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}

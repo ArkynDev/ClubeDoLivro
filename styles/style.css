@@ -1,0 +1,52 @@
+:root {
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+#mobileMenu {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  background-color: #112250;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  display: if(media(width <= var(--breakpoint-tablet)): flex; else: none);
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+#mobileMenu:hover {
+  background-color: #3C507D;
+  transform: scale(1.1);
+}
+#mobileMenu:active {
+  transform: scale(0.95);
+}
+#mobileMenu span {
+  font-size: 2.5rem;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/*# sourceMappingURL=style.css.map */
