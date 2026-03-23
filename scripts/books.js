@@ -86,7 +86,10 @@ function mostrarModal(livro) {
         livro[CONFIG.COLUNAS.LOJA03]
     ].filter(l => l && l.trim() !== '');
 
-    const pdf = livro[CONFIG.COLUNAS.PDF];
+    const pdfId = livro[CONFIG.COLUNAS.PDF];
+    const pdf = pdfId && pdfId.trim() !== ''
+        ? `https://drive.google.com/uc?export=download&id=${pdfId}`
+        : '';
 
     modal.querySelector('.modal-body').innerHTML = `
         <img src="${livro[CONFIG.COLUNAS.CAPA]}" class="modal-img">
