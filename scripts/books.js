@@ -35,33 +35,6 @@ function renderizarLivros(livros) {
     });
 }
 
-function criarCardLivro(livro) {
-    const div = document.createElement('div');
-    div.className = 'book-card';
-
-    const titulo = livro[CONFIG.COLUNAS.TITULO];
-    const autor = livro[CONFIG.COLUNAS.AUTOR];
-    const capa = livro[CONFIG.COLUNAS.CAPA];
-
-    div.innerHTML = `
-        <img src="${capa}" onerror="this.src='${CONFIG.IMAGEM_PADRAO}'">
-
-        <div class="book-info">
-            <h2 class="title">${titulo}</h2>
-            <p class="author">${autor}</p>
-
-            <div class="actions">
-                <button class="details">Detalhes</button>
-            </div>
-        </div>
-    `;
-
-    div.querySelector('.details')
-        .addEventListener('click', () => mostrarModal(livro));
-
-    return div;
-}
-
 // Função para criar o card de um livro
 function criarCardLivro(livro) {
     const div = document.createElement('div');
@@ -73,8 +46,8 @@ function criarCardLivro(livro) {
     
     div.innerHTML = `
         <img src="${capaUrl}" 
-             alt="Capa do livro: ${escapeHtml(titulo)}" 
-             onerror="this.src='${CONFIG.IMAGEM_PADRAO}'">
+            alt="Capa do livro: ${escapeHtml(titulo)}" 
+            onerror="this.src='${CONFIG.IMAGEM_PADRAO}'">
 
         <div class="book-info">
             <h2 class="title">${escapeHtml(titulo)}</h2>
@@ -111,14 +84,14 @@ function mostrarModal(livro) {
         livro[CONFIG.COLUNAS.LOJA01],
         livro[CONFIG.COLUNAS.LOJA02],
         livro[CONFIG.COLUNAS.LOJA03]
-    ].filter(l => l);
+    ].filter(l => l && l.trim() !== '');
 
     const pdf = livro[CONFIG.COLUNAS.PDF];
 
     modal.querySelector('.modal-body').innerHTML = `
         <img src="${livro[CONFIG.COLUNAS.CAPA]}" class="modal-img">
 
-        <h2>${livro[CONFIG.COLUNAS.TITULO]}</h2>
+        <h2>${escapeHtml(livro[CONFIG.COLUNAS.TITULO])}</h2>
         <p class="modal-autor">${livro[CONFIG.COLUNAS.AUTOR]}</p>
         <p class="modal-desc">${livro[CONFIG.COLUNAS.DETALHES] || ''}</p>
 
