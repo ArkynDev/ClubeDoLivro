@@ -1,3 +1,4 @@
+@charset "UTF-8";
 :root {
   --breakpoint-mobile: 480px;
   --breakpoint-tablet: 768px;
@@ -12,10 +13,218 @@
 }
 
 body {
+  height: 100vh;
+  overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.6;
+  background: #f5f5f5;
 }
 
+.book-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+.book-section h1 {
+  overflow-y: auto;
+  padding-right: 8px;
+  text-align: center;
+}
+
+.book-card {
+  display: flex;
+  gap: 12px;
+  background: white;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.book-card img {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.book-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TITULO */
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* AUTOR */
+.author {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* BOTÕES */
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* ESTILO BOTÕES */
+.actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Comprar */
+.buy {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Detalhes */
+.details {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* CAIXA DO MODAL */
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  padding: 16px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+.modal-content::before {
+  content: "";
+  width: 40px;
+  height: 4px;
+  background: #ccc;
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+/* SCROLL INTERNO */
+.modal-body {
+  overflow-y: auto;
+}
+
+/* BOTÃO FECHAR */
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* IMAGEM */
+.modal-img {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 0 auto 12px auto;
+  display: block;
+}
+
+/* TITULO */
+.modal-body h2 {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+/* AUTOR */
+.modal-autor {
+  text-align: center;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+/* DESCRIÇÃO */
+.modal-desc {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+/* BOTÕES */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BOTÃO COMPRA */
+.btn-buy {
+  background: #28a745;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* BOTÃO PDF */
+.btn-pdf {
+  background: #007bff;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.modal.closing .modal-content {
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+/* ANIMAÇÃO */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
 #mobileMenu {
   position: fixed;
   bottom: 20px;
@@ -28,7 +237,7 @@ body {
   color: white;
   font-size: 28px;
   cursor: pointer;
-  display: if(media(width <= var(--breakpoint-tablet)): flex; else: none);
+  display: none;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -45,6 +254,11 @@ body {
   font-size: 2.5rem;
 }
 
+@media (max-width: 768px) {
+  #mobileMenu {
+    display: flex;
+  }
+}
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
