@@ -51,7 +51,6 @@ body {
     height: 100vh;
     overflow: hidden;
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.6;
     background: #f5f5f5;
 }
 
@@ -60,22 +59,20 @@ body {
     display: flex;
     flex-direction: column;
     padding: 16px;
+}
 
-    h1 {
-        overflow-y: auto;
-        padding-right: 8px;
-        text-align: center;
-    }
+.book-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 6px;
 }
 
 .book-card {
     display: flex;
     gap: 12px;
-
     background: white;
     padding: 12px;
     margin-bottom: 12px;
-
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 
@@ -97,7 +94,6 @@ body {
 .title {
     font-size: 16px;
     font-weight: bold;
-    margin-bottom: 4px;
 }
 
 /* AUTOR */
@@ -110,41 +106,26 @@ body {
 /* BOTÕES */
 .actions {
     margin-top: auto;
-    display: flex;
-    gap: 8px;
-}
-
-/* ESTILO BOTÕES */
-.actions button {
-    flex: 1;
-    padding: 8px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-/* Comprar */
-.buy {
-    background-color: #28a745;
-    color: white;
 }
 
 /* Detalhes */
 .details {
-    background-color: #007bff;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
     color: white;
+    cursor: pointer;
 }
 
 .modal {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.6);
-
     display: none;
     align-items: flex-end; // 🔥 muda aqui (vem de baixo)
     justify-content: center;
-
     z-index: 9999;
 }
 
@@ -152,18 +133,12 @@ body {
 .modal-content {
     width: 100%;
     max-width: 500px;
-
     background: white;
     border-radius: 16px 16px 0 0;
-
     padding: 16px;
-
-    max-height: 85vh; // 🔥 controla altura
-    overflow: hidden;
-
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
-
     animation: slideUp 0.3s ease;
 
     &::before{
@@ -196,11 +171,9 @@ body {
 .modal-img {
     width: 120px;
     height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-
-    margin: 0 auto 12px auto;
+    margin: 0 auto 12px;
     display: block;
+    border-radius: 10px;
 }
 
 /* TITULO */
@@ -214,14 +187,13 @@ body {
 .modal-autor {
     text-align: center;
     color: #666;
-    margin-bottom: 12px;
 }
 
 /* DESCRIÇÃO */
 .modal-desc {
     font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 16px;
+    margin: 10px 0;
+
 }
 
 /* BOTÕES */
@@ -231,26 +203,65 @@ body {
     gap: 10px;
 }
 
-/* BOTÃO COMPRA */
-.btn-buy {
-    background: #28a745;
+.btn-buy,
+.btn-pdf {
+    display: flex; // 🔥 agora é flex
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
     color: white;
     padding: 12px;
     text-align: center;
     border-radius: 10px;
     text-decoration: none;
     font-size: 14px;
+    font-weight: 500;
+
+    transition: all 0.2s ease;
 }
 
-/* BOTÃO PDF */
+.btn-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* Amazon */
+.btn-buy.amazon {
+    background: #ff9900;
+}
+
+.btn-buy.amazon:hover {
+    background: #e68a00;
+}
+
+/* Shopee */
+.btn-buy.shopee {
+    background: #ee4d2d;
+}
+
+.btn-buy.shopee:hover {
+    background: #d84326;
+}
+
+/* PDF */
 .btn-pdf {
     background: #007bff;
-    color: white;
-    padding: 12px;
-    text-align: center;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 14px;
+}
+
+.btn-pdf:hover {
+    background: #0056b3;
+}
+
+/* ANIMAÇÃO */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
 
 .modal.closing .modal-content {
@@ -266,13 +277,81 @@ body {
     }
 }
 
-/* ANIMAÇÃO */
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
+.skeleton {
+    pointer-events: none;
+}
+
+.skeleton-img,
+.skeleton-title,
+.skeleton-author,
+.skeleton-btn {
+    animation: shimmer 1.5s infinite;
+    background: linear-gradient(
+        90deg,
+        #e0e0e0 25%,
+        #f5f5f5 50%,
+        #e0e0e0 75%
+    );
+    background-size: 200% 100%;
+    border-radius: 8px;
+}
+
+/* IMAGEM (LIVRO) */
+.skeleton-img {
+    width: 80px;
+    height: 120px;
+    position: relative;
+
+    &::before {
+    content: "📖";
+    position: absolute;
+    opacity: 0.4;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     }
-    to {
-        transform: translateY(0);
+}
+
+/* TEXTO */
+.skeleton-title {
+    width: 60%;
+    height: 14px;
+    margin-bottom: 10px;
+}
+
+.skeleton-author {
+    width: 60%;
+    height: 14px;
+    margin-bottom: 10px;
+}
+
+.skeleton-btn {
+    width: 100%;
+    height: 32px;
+}
+
+/* ANIMAÇÕES */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.4;
     }
 }
 

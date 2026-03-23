@@ -20,7 +20,7 @@ async function carregarLivros() {
         }
         
     } catch (error) {
-        console.error('Erro ao carregar livros:', error);
+        console.error(error);
         mostrarMensagem(CONFIG.MSG_ERRO, 'erro');
     }
 }
@@ -28,27 +28,38 @@ async function carregarLivros() {
 // Função para renderizar os livros no HTML
 function renderizarLivros(livros) {
     const container = document.querySelector('.book-list');
-    
-    if (!container) {
-        console.error('Container .book-list não encontrado');
-        return;
-    }
-    
     container.innerHTML = '';
-    
-    const livrosValidos = livros.filter(livro => {
-        return livro[CONFIG.COLUNAS.TITULO] && livro[CONFIG.COLUNAS.AUTOR];
+
+    livros.forEach(livro => {
+        container.appendChild(criarCardLivro(livro));
     });
-    
-    if (livrosValidos.length === 0) {
-        mostrarMensagem(CONFIG.MSG_SEM_DADOS, 'info');
-        return;
-    }
-    
-    livrosValidos.forEach(livro => {
-        const bookCard = criarCardLivro(livro);
-        container.appendChild(bookCard);
-    });
+}
+
+function criarCardLivro(livro) {
+    const div = document.createElement('div');
+    div.className = 'book-card';
+
+    const titulo = livro[CONFIG.COLUNAS.TITULO];
+    const autor = livro[CONFIG.COLUNAS.AUTOR];
+    const capa = livro[CONFIG.COLUNAS.CAPA];
+
+    div.innerHTML = `
+        <img src="${capa}" onerror="this.src='${CONFIG.IMAGEM_PADRAO}'">
+
+        <div class="book-info">
+            <h2 class="title">${titulo}</h2>
+            <p class="author">${autor}</p>
+
+            <div class="actions">
+                <button class="details">Detalhes</button>
+            </div>
+        </div>
+    `;
+
+    div.querySelector('.details')
+        .addEventListener('click', () => mostrarModal(livro));
+
+    return div;
 }
 
 // Função para criar o card de um livro
@@ -96,34 +107,48 @@ function mostrarModal(livro) {
         document.body.appendChild(modal);
     }
 
-    const titulo = livro[CONFIG.COLUNAS.TITULO] || '';
-    const autor = livro[CONFIG.COLUNAS.AUTOR] || '';
-    const capa = livro[CONFIG.COLUNAS.CAPA] || CONFIG.IMAGEM_PADRAO;
-    const detalhes = livro[CONFIG.COLUNAS.DETALHES] || '';
-
     const compraLinks = [
         livro[CONFIG.COLUNAS.LOJA01],
         livro[CONFIG.COLUNAS.LOJA02],
         livro[CONFIG.COLUNAS.LOJA03]
-    ].filter(link => link && link.trim() !== '');
+    ].filter(l => l);
 
     const pdf = livro[CONFIG.COLUNAS.PDF];
 
     modal.querySelector('.modal-body').innerHTML = `
-        <img src="${capa}" class="modal-img" onerror="this.src='${CONFIG.IMAGEM_PADRAO}'" />
+        <img src="${livro[CONFIG.COLUNAS.CAPA]}" class="modal-img">
 
-        <h2>${escapeHtml(titulo)}</h2>
-        <p class="modal-autor">${escapeHtml(autor)}</p>
-        <p class="modal-desc">${escapeHtml(detalhes)}</p>
+        <h2>${livro[CONFIG.COLUNAS.TITULO]}</h2>
+        <p class="modal-autor">${livro[CONFIG.COLUNAS.AUTOR]}</p>
+        <p class="modal-desc">${livro[CONFIG.COLUNAS.DETALHES] || ''}</p>
 
         <div class="modal-actions">
-            ${compraLinks.map((link, i) => `
-                <a href="${link}" target="_blank" class="btn-buy">
-                    Comprar ${i + 1}
-                </a>
-            `).join('')}
+            ${compraLinks.map((link, i) => {
+                let classe = 'btn-buy';
+                let icon = '';
+                let texto = `Comprar ${i + 1}`;
 
-            ${pdf && pdf.trim() !== '' ? `
+                if (i === 0) {
+                    classe += ' amazon';
+                    icon = 'icons/amazon_icon.png';
+                    texto = 'Comprar na Amazon';
+                }
+
+                if (i === 1) {
+                    classe += ' shopee';
+                    icon = 'icons/shopee_icon.png';
+                    texto = 'Comprar na Shopee';
+                }
+
+                return `
+                    <a href="${link}" target="_blank" class="${classe}">
+                        ${icon ? `<img src="${icon}" class="btn-icon" />` : ''}
+                        <span>${texto}</span>
+                    </a>
+                `;
+            }).join('')}
+
+            ${pdf ? `
                 <a href="${pdf}" target="_blank" class="btn-pdf">
                     📥 Baixar PDF
                 </a>
@@ -146,7 +171,7 @@ function criarModal() {
         </div>
     `;
 
-    const fecharModal = () => {
+    const fechar = () => {
         modal.classList.add('closing');
 
         setTimeout(() => {
@@ -155,14 +180,11 @@ function criarModal() {
         }, 300);
     };
 
-    modal.querySelector('.close-modal')
-        .addEventListener('click', fecharModal);
+    modal.querySelector('.close-modal').onclick = fechar;
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            fecharModal();
-        }
-    });
+    modal.onclick = (e) => {
+        if (e.target === modal) fechar();
+    };
 
     return modal;
 }
@@ -170,27 +192,25 @@ function criarModal() {
 // Função para mostrar loading
 function mostrarLoading() {
     const container = document.querySelector('.book-list');
-    if (container) {
-        container.innerHTML = `
-            <div class="loading">
-                <p>${CONFIG.MSG_LOADING}</p>
-                <div class="spinner"></div>
+
+    const quantidade = Math.ceil(window.innerHeight / 140);
+
+    container.innerHTML = Array(quantidade).fill(`
+        <div class="book-card skeleton">
+            <div class="skeleton-img"></div>
+
+            <div class="book-info">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-author"></div>
+                <div class="skeleton-btn"></div>
             </div>
-        `;
-    }
+        </div>
+    `).join('');
 }
 
 // Função para mostrar mensagens
-function mostrarMensagem(mensagem, tipo = 'erro') {
-    const container = document.querySelector('.book-list');
-    if (container) {
-        container.innerHTML = `
-            <div class="message ${tipo}">
-                <p>${mensagem}</p>
-                ${tipo === 'erro' ? '<button onclick="carregarLivros()">Tentar novamente</button>' : ''}
-            </div>
-        `;
-    }
+function mostrarMensagem(msg) {
+    document.querySelector('.book-list').innerHTML = `<p>${msg}</p>`;
 }
 
 // Função utilitária para escapar HTML
