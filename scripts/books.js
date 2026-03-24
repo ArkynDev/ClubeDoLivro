@@ -199,3 +199,4 @@ function escapeHtml(texto) {
 
 // Exporta função
 window.carregarLivros = carregarLivros;
+window.mostrarModal = mostrarModal;

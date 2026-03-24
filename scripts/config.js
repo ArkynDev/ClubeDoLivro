@@ -13,8 +13,12 @@ const CONFIG = {
         LOJA01: 'LOJA01',
         LOJA02: 'LOJA02',
         LOJA03: 'LOJA03',
-        PDF: 'PDF'
+        PDF: 'PDF',
+        MES: 'MES',
+        GRUPO: 'GRUPO',
     },
+
+    GRUPO_ATIVO: 3,
     
     // Configurações visuais
     IMAGEM_PADRAO: 'https://via.placeholder.com/300x450?text=Sem+Capa',
